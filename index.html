@@ -1,173 +1,110 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Detective Personality Quiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detective Quiz</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #121212;
+      font-family: Arial, sans-serif;
+      background-color: #1c1c1c;
       color: #f0f0f0;
+      padding: 20px;
       text-align: center;
-      padding: 20px;
     }
-    h1 {
-      color: #ffcc00;
+    .question-container {
+      margin-bottom: 30px;
     }
-    .question-box {
-      background: #1e1e1e;
-      padding: 20px;
-      margin: 20px auto;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+    .question-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      margin-bottom: 10px;
     }
     button {
-      background: #ffcc00;
-      color: #000;
-      border: none;
+      display: block;
+      margin: 10px auto;
       padding: 10px 20px;
-      margin: 10px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+      border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
     }
     button:hover {
-      background: #e6b800;
-    }
-    img {
-      width: 100%;
-      max-height: 200px;
-      border-radius: 10px;
-      object-fit: cover;
-      margin-bottom: 10px;
+      background-color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>🕵️‍♂️ Detective Mystery Quiz</h1>
-  <div id="quiz-container"></div>
+  <h1>🕵️ Detective Quiz</h1>
+  <div id="quiz"></div>
   <h2 id="score"></h2>  <script>
-    const quizData = [
+    const questions = [
       {
-        question: "Who was seen leaving the crime scene with a torn glove?",
-        answers: [
-          "The butler",
-          "The maid",
-          "The chef",
-          "The gardener"
-        ],
-        correct: 0,
-        image: "https://images.unsplash.com/photo-1602184439208-2b3c3c6a1b94"
+        question: "A body is found in a locked room. There’s a puddle of water and a broken window. What happened?",
+        answers: ["The victim was stabbed", "The ice murder weapon melted", "The killer escaped through the door", "A fire broke out"],
+        correct: "The ice murder weapon melted",
+        image: "https://images.unsplash.com/photo-1598214886805-0d7d8e05a310"
       },
       {
-        question: "What item was missing from the victim's study?",
-        answers: [
-          "A golden pen",
-          "A secret file",
-          "A pair of glasses",
-          "A clock"
-        ],
-        correct: 1,
-        image: "https://images.unsplash.com/photo-1622555061326-2bb5c3d17729"
+        question: "You find a watch stopped at 3:15 beside the victim. What could it mean?",
+        answers: ["That’s when the power went out", "It’s irrelevant", "Time of death was 3:15", "The killer left it as a clue"],
+        correct: "Time of death was 3:15",
+        image: "https://images.unsplash.com/photo-1564499215277-ea1972b4ae40"
       },
       {
-        question: "Where did the detective find muddy footprints?",
-        answers: [
-          "Library",
-          "Kitchen",
-          "Garden",
-          "Basement"
-        ],
-        correct: 2,
-        image: "https://images.unsplash.com/photo-1594641977035-b518d9940f4a"
+        question: "Footprints lead to a lake but don’t come back. What happened?",
+        answers: ["The person drowned", "The killer flew away", "They hid under a boat", "They swam across"],
+        correct: "They swam across",
+        image: "https://images.unsplash.com/photo-1579121503139-daf9b9b31cf9"
       },
       {
-        question: "What was the murder weapon?",
-        answers: [
-          "Letter opener",
-          "Fire poker",
-          "Rope",
-          "Poison"
-        ],
-        correct: 1,
-        image: "https://images.unsplash.com/photo-1603354350317-47d7b6142b8d"
+        question: "The victim clutched a torn playing card. Why?",
+        answers: ["They were gambling", "Clue to the killer’s identity", "Coincidence", "He was a magician"],
+        correct: "Clue to the killer’s identity",
+        image: "https://images.unsplash.com/photo-1615361204783-0f2325b89b55"
       },
       {
-        question: "Whose alibi didn’t match the CCTV footage?",
-        answers: [
-          "The driver",
-          "The chef",
-          "The maid",
-          "The guest"
-        ],
-        correct: 3,
-        image: "https://images.unsplash.com/photo-1610147233839-fd4c36e52d3f"
-      },
-      // Add more questions up to 30 like the above:
+        question: "A man claims he was asleep during the murder. What do you ask?",
+        answers: ["His mattress type", "What he dreamt of", "Who can confirm his alibi", "When he ate"],
+        correct: "Who can confirm his alibi",
+        image: "https://images.unsplash.com/photo-1556742400-b5c6d006ef05"
+      }
+      // Add 25 more questions here using the same format
     ];
 
-    while (quizData.length < 30) {
-      quizData.push({
-        question: `Filler mystery question #${quizData.length + 1}`,
-        answers: [
-          "Detective A",
-          "Detective B",
-          "Detective C",
-          "Detective D"
-        ],
-        correct: Math.floor(Math.random() * 4),
-        image: "https://source.unsplash.com/600x400/?detective"
-      });
-    }
-
-    function shuffleArray(array) {
+    function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
+      return array;
     }
 
-    let current = 0;
+    let currentQuestion = 0;
     let score = 0;
 
     function showQuestion() {
-      const quizContainer = document.getElementById("quiz-container");
-      quizContainer.innerHTML = "";
-      const q = quizData[current];
-
-      const questionBox = document.createElement("div");
-      questionBox.className = "question-box";
-
-      const img = document.createElement("img");
-      img.src = q.image;
-      questionBox.appendChild(img);
-
-      const qText = document.createElement("h2");
-      qText.textContent = `Q${current + 1}: ${q.question}`;
-      questionBox.appendChild(qText);
-
-      const indexes = [0, 1, 2, 3];
-      shuffleArray(indexes);
-      indexes.forEach(i => {
+      const q = questions[currentQuestion];
+      const quizDiv = document.getElementById("quiz");
+      quizDiv.innerHTML = `<div class="question-container">
+        <img class="question-image" src="${q.image}" alt="clue image">
+        <h2>${q.question}</h2>
+      </div>`;
+      const shuffled = shuffle([...q.answers]);
+      shuffled.forEach(ans => {
         const btn = document.createElement("button");
-        btn.textContent = q.answers[i];
+        btn.textContent = ans;
         btn.onclick = () => {
-          if (i === q.correct) score++;
-          current++;
-          if (current < quizData.length) showQuestion();
-          else showScore();
+          if (ans === q.correct) score++;
+          currentQuestion++;
+          if (currentQuestion < questions.length) showQuestion();
+          else document.getElementById("score").textContent = `You solved ${score} / ${questions.length} mysteries!`;
         };
-        questionBox.appendChild(btn);
+        quizDiv.appendChild(btn);
       });
-
-      quizContainer.appendChild(questionBox);
-    }
-
-    function showScore() {
-      document.getElementById("quiz-container").innerHTML = "";
-      document.getElementById("score").textContent = `🕵️‍♀️ You solved ${score} out of ${quizData.length} mysteries!`;
     }
 
     showQuestion();
