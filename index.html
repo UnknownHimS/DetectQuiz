@@ -2,160 +2,192 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Detective Quiz 🕵️‍♂️</title>
+  <title>Detective Quiz Game</title>
   <style>
     body {
-      background-color: #121212;
-      color: white;
       font-family: 'Segoe UI', sans-serif;
+      background: #1c1c1c;
+      color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       margin: 0;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      background: #2b2b2b;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .question-img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .question-text {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+
+    .options {
+      list-style: none;
       padding: 0;
     }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
+
+    .options li {
+      margin: 8px 0;
     }
-    .question {
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 10px #333;
-    }
-    img {
+
+    .options button {
       width: 100%;
-      border-radius: 8px;
-      margin-top: 15px;
-    }
-    .choices {
-      display: flex;
-      flex-direction: column;
-      margin-top: 15px;
-    }
-    .choices button {
-      margin: 5px 0;
-      padding: 10px;
-      background: #2c2c2c;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .choices button:hover {
+      padding: 12px;
       background: #444;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-    .result {
-      font-size: 1.2em;
+
+    .options button:hover {
+      background: #666;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-size: 1.1em;
+    }
+
+    #next-btn {
       margin-top: 20px;
+      padding: 10px 18px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      display: none;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="quiz-container"></div>
-  <div class="container result" id="result-container"></div>
+  <div class="quiz-container">
+    <img id="questionImage" class="question-img" src="" alt="Detective Scene">
+    <div id="questionText" class="question-text"></div>
+    <ul id="optionsList" class="options"></ul>
+    <div id="result"></div>
+    <button id="next-btn">Next Question</button>
+  </div>
 
   <script>
     const questions = [
       {
-        question: "What’s the first thing a detective should do at a crime scene?",
-        choices: ["Secure the area", "Question witnesses", "Collect evidence", "Call backup"],
-        correct: "Secure the area",
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Do_not_cross_crime_scene_tape.jpg/640px-Do_not_cross_crime_scene_tape.jpg"
+        text: "Who is the detective in this scene?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Sherlock_Holmes_Portrait_Paget.jpg/440px-Sherlock_Holmes_Portrait_Paget.jpg",
+        choices: ["Sherlock Holmes", "Nancy Drew", "Hercule Poirot", "Inspector Gadget"],
+        answer: "Sherlock Holmes"
       },
       {
-        question: "What is a common fingerprint pattern?",
-        choices: ["Zigzag", "Swirl", "Loop", "Stripe"],
-        correct: "Loop",
-        img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Fingerprint_Whorl.jpg"
+        text: "Where did the crime take place?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Library_of_Congress_Reading_Room_Panorama_2.jpg/640px-Library_of_Congress_Reading_Room_Panorama_2.jpg",
+        choices: ["Library", "Museum", "Bank", "Café"],
+        answer: "Library"
       },
       {
-        question: "Which item is least likely to be considered forensic evidence?",
-        choices: ["Hair strand", "Gun", "Note", "Wallet"],
-        correct: "Wallet",
-        img: "https://upload.wikimedia.org/wikipedia/commons/f/f7/Forensics_DNA_Hair.jpg"
-      },
-      {
-        question: "Which part of a gun leaves unique markings on bullets?",
-        choices: ["Trigger", "Magazine", "Barrel", "Grip"],
-        correct: "Barrel",
-        img: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Gun_barrel_with_sight.jpg"
-      },
-      {
-        question: "Who is considered the father of modern criminal investigation?",
-        choices: ["Sherlock Holmes", "Alphonse Bertillon", "Allan Pinkerton", "William Burns"],
-        correct: "Alphonse Bertillon",
-        img: "https://upload.wikimedia.org/wikipedia/commons/5/54/Alphonse_Bertillon.jpg"
+        text: "What clue was found near the victim?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Magnifying_glass_icon.svg/512px-Magnifying_glass_icon.svg.png",
+        choices: ["A magnifying glass", "A glove", "A footprint", "A cigarette"],
+        answer: "A magnifying glass"
       }
-      // You can copy and extend this up to 30 questions
+      // You can add up to 10 questions here...
     ];
 
-    // Add 25 more fake but logical questions
-    while (questions.length < 30) {
-      const qNum = questions.length + 1;
-      questions.push({
-        question: `Detective Case #${qNum}: What's the next best move?`,
-        choices: shuffle(["Interrogate suspects", "Analyze evidence", "Check CCTV", "Report to HQ"]),
-        correct: "Analyze evidence",
-        img: "https://upload.wikimedia.org/wikipedia/commons/1/15/Evidence_box_with_contents.jpg"
+    let current = 0;
+    let score = 0;
+
+    const imgEl = document.getElementById("questionImage");
+    const qText = document.getElementById("questionText");
+    const optionsList = document.getElementById("optionsList");
+    const resultDiv = document.getElementById("result");
+    const nextBtn = document.getElementById("next-btn");
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function loadQuestion() {
+      const q = questions[current];
+      qText.textContent = q.text;
+      resultDiv.textContent = "";
+      nextBtn.style.display = "none";
+
+      imgEl.src = q.img;
+      imgEl.alt = "Image";
+      imgEl.onerror = () => {
+        imgEl.src = "https://via.placeholder.com/400x200?text=Image+Not+Available";
+      };
+
+      const shuffledChoices = shuffleArray([...q.choices]);
+      optionsList.innerHTML = "";
+      shuffledChoices.forEach(choice => {
+        const li = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = () => selectAnswer(choice, q.answer);
+        li.appendChild(btn);
+        optionsList.appendChild(li);
       });
     }
 
-    function shuffle(arr) {
-      return arr.map(value => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value);
-    }
+    function selectAnswer(selected, correct) {
+      const buttons = optionsList.querySelectorAll("button");
+      buttons.forEach(btn => btn.disabled = true);
 
-    function renderQuiz() {
-      const quizContainer = document.getElementById('quiz-container');
-      quizContainer.innerHTML = '';
-
-      questions.forEach((q, index) => {
-        const qDiv = document.createElement('div');
-        qDiv.className = 'question';
-        qDiv.innerHTML = `
-          <h3>Q${index + 1}: ${q.question}</h3>
-          <img src="${q.img}" alt="Question image">
-          <div class="choices" id="choices-${index}"></div>
-        `;
-        quizContainer.appendChild(qDiv);
-
-        const shuffled = shuffle([...q.choices]);
-        const choicesDiv = document.getElementById(`choices-${index}`);
-
-        shuffled.forEach(choice => {
-          const btn = document.createElement('button');
-          btn.innerText = choice;
-          btn.onclick = () => checkAnswer(index, choice, btn);
-          choicesDiv.appendChild(btn);
-        });
-      });
-    }
-
-    const userAnswers = [];
-
-    function checkAnswer(index, choice, btn) {
-      if (userAnswers[index]) return;
-      const correct = questions[index].correct;
-      if (choice === correct) {
-        btn.style.background = "green";
+      if (selected === correct) {
+        resultDiv.textContent = "✅ Correct!";
+        score++;
       } else {
-        btn.style.background = "red";
+        resultDiv.textContent = `❌ Wrong! Correct answer: ${correct}`;
       }
-      userAnswers[index] = choice;
-      checkIfDone();
+
+      nextBtn.style.display = "inline-block";
     }
 
-    function checkIfDone() {
-      if (userAnswers.filter(a => a).length === questions.length) {
-        const score = userAnswers.filter((a, i) => a === questions[i].correct).length;
-        document.getElementById('result-container').innerText = `🎯 You scored ${score} out of ${questions.length}!`;
+    nextBtn.onclick = () => {
+      current++;
+      if (current < questions.length) {
+        loadQuestion();
+      } else {
+        showFinalScore();
       }
+    };
+
+    function showFinalScore() {
+      imgEl.style.display = "none";
+      qText.innerHTML = `🎉 Finished!<br>Your score: ${score} / ${questions.length}`;
+      optionsList.innerHTML = "";
+      resultDiv.innerHTML = "";
+      nextBtn.style.display = "none";
     }
 
-    renderQuiz();
+    // Start the game
+    loadQuestion();
   </script>
 </body>
 </html>
