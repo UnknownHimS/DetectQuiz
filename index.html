@@ -2,192 +2,204 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Detective Quiz Game</title>
-  <style>
-    body {
+  <title>Detective Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #1c1c1c;
-      color: #eee;
+    }
+
+    body {
+      background: #111;
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
+      height: 100vh;
     }
 
-    .quiz-container {
-      background: #2b2b2b;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    #quiz-container {
+      background: #1e1e1e;
+      border-radius: 20px;
       padding: 20px;
-      max-width: 420px;
-      width: 100%;
+      width: 90%;
+      max-width: 450px;
       text-align: center;
+      box-shadow: 0 0 30px rgba(0, 255, 170, 0.4);
+      animation: fadeIn 0.5s ease-in;
     }
 
-    .question-img {
-      width: 100%;
-      max-height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 15px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    .question-text {
-      font-size: 1.2em;
-      margin-bottom: 15px;
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #00ffd5;
     }
 
-    .options {
-      list-style: none;
-      padding: 0;
+    .question {
+      font-size: 18px;
+      margin-bottom: 20px;
     }
 
-    .options li {
-      margin: 8px 0;
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .options button {
-      width: 100%;
-      padding: 12px;
-      background: #444;
-      border: none;
-      border-radius: 6px;
+    .choice-btn {
+      background: #222;
+      border: 2px solid #00ffd5;
       color: white;
-      font-size: 1em;
+      padding: 10px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s;
     }
 
-    .options button:hover {
-      background: #666;
-    }
-
-    #result {
-      margin-top: 15px;
-      font-size: 1.1em;
+    .choice-btn:hover {
+      background: #00ffd5;
+      color: black;
     }
 
     #next-btn {
       margin-top: 20px;
-      padding: 10px 18px;
-      background: #28a745;
-      color: white;
+      padding: 10px 20px;
+      background: #00ffd5;
+      color: #000;
       border: none;
-      border-radius: 6px;
-      font-size: 1em;
-      display: none;
+      border-radius: 10px;
       cursor: pointer;
+      font-weight: bold;
+      display: none;
+    }
+
+    #score {
+      font-size: 20px;
+      margin-top: 20px;
+      color: #0f0;
     }
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <img id="questionImage" class="question-img" src="" alt="Detective Scene">
-    <div id="questionText" class="question-text"></div>
-    <ul id="optionsList" class="options"></ul>
-    <div id="result"></div>
-    <button id="next-btn">Next Question</button>
+  <div id="quiz-container">
+    <h1>🕵️‍♂️ Detective Quiz</h1>
+    <div class="question" id="question-text"></div>
+    <div class="choices" id="choices"></div>
+    <button id="next-btn">Next</button>
+    <div id="score"></div>
   </div>
 
   <script>
     const questions = [
       {
-        text: "Who is the detective in this scene?",
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Sherlock_Holmes_Portrait_Paget.jpg/440px-Sherlock_Holmes_Portrait_Paget.jpg",
-        choices: ["Sherlock Holmes", "Nancy Drew", "Hercule Poirot", "Inspector Gadget"],
-        answer: "Sherlock Holmes"
+        text: "You find a body in a locked room with no windows. The key is inside the victim's pocket. What's most suspicious?",
+        choices: ["No signs of break-in", "Key in the victim's pocket", "No blood", "Open window"],
+        answer: "Key in the victim's pocket"
       },
       {
-        text: "Where did the crime take place?",
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Library_of_Congress_Reading_Room_Panorama_2.jpg/640px-Library_of_Congress_Reading_Room_Panorama_2.jpg",
-        choices: ["Library", "Museum", "Bank", "Café"],
-        answer: "Library"
+        text: "A man was found murdered on a Sunday. The wife said she was sleeping, the butler was cleaning, and the cook was cooking breakfast. Who is lying?",
+        choices: ["Wife", "Butler", "Cook", "Neighbor"],
+        answer: "Cook"
       },
       {
-        text: "What clue was found near the victim?",
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Magnifying_glass_icon.svg/512px-Magnifying_glass_icon.svg.png",
-        choices: ["A magnifying glass", "A glove", "A footprint", "A cigarette"],
-        answer: "A magnifying glass"
+        text: "A woman shoots her husband, holds him underwater for 5 minutes, then hangs him. He survives. How?",
+        choices: ["It's a movie scene", "She failed to kill", "He faked his death", "She used a doll"],
+        answer: "It's a movie scene"
+      },
+      {
+        text: "The killer left a coded note: 7H15 M3554G3 M34N5 50M37H1NG. What does it say?",
+        choices: ["This message means something", "I'm guilty", "Find the gun", "Behind the wall"],
+        answer: "This message means something"
+      },
+      {
+        text: "A man is killed in his study. The suspects: wife, cook, gardener. A note says 'gardener'. But it's a setup. Who’s guilty?",
+        choices: ["Wife", "Gardener", "Cook", "The man himself"],
+        answer: "Wife"
+      },
+      {
+        text: "A man is found dead with a cassette in one hand and a gun in the other. The tape said, 'I can't go on.' You rewind and hear nothing. What happened?",
+        choices: ["He was murdered", "He erased it", "Suicide", "He passed out"],
+        answer: "He was murdered"
+      },
+      {
+        text: "A murderer is sentenced to death. He must pick from 3 rooms: fire, killers with guns, lions unfed for years. Safest?",
+        choices: ["Room with fire", "Killers", "Lions", "None"],
+        answer: "Lions"
+      },
+      {
+        text: "Detectives enter a crime scene. Coffee is cold, TV is on, front door is locked from inside. What's the clue?",
+        choices: ["TV is on", "Locked door", "Cold coffee", "Messy room"],
+        answer: "Cold coffee"
+      },
+      {
+        text: "A girl was murdered on her birthday. Only 4 people attended: the chef, her sister, her friend, and her boyfriend. Who did it if the cake had poison only on her slice?",
+        choices: ["Chef", "Friend", "Boyfriend", "Sister"],
+        answer: "Chef"
+      },
+      {
+        text: "A detective entered a bar and asked for a glass of water. The bartender pulled a gun. The man said ‘thank you’ and left. Why?",
+        choices: ["He had hiccups", "It was a robbery", "He forgot his wallet", "The bartender knew him"],
+        answer: "He had hiccups"
       }
-      // You can add up to 10 questions here...
     ];
 
     let current = 0;
     let score = 0;
 
-    const imgEl = document.getElementById("questionImage");
-    const qText = document.getElementById("questionText");
-    const optionsList = document.getElementById("optionsList");
-    const resultDiv = document.getElementById("result");
+    const questionText = document.getElementById("question-text");
+    const choicesDiv = document.getElementById("choices");
     const nextBtn = document.getElementById("next-btn");
+    const scoreDisplay = document.getElementById("score");
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
     }
 
-    function loadQuestion() {
+    function showQuestion() {
       const q = questions[current];
-      qText.textContent = q.text;
-      resultDiv.textContent = "";
-      nextBtn.style.display = "none";
-
-      imgEl.src = q.img;
-      imgEl.alt = "Image";
-      imgEl.onerror = () => {
-        imgEl.src = "https://via.placeholder.com/400x200?text=Image+Not+Available";
-      };
-
-      const shuffledChoices = shuffleArray([...q.choices]);
-      optionsList.innerHTML = "";
+      questionText.textContent = q.text;
+      const shuffledChoices = shuffle([...q.choices]);
+      choicesDiv.innerHTML = "";
       shuffledChoices.forEach(choice => {
-        const li = document.createElement("li");
         const btn = document.createElement("button");
         btn.textContent = choice;
-        btn.onclick = () => selectAnswer(choice, q.answer);
-        li.appendChild(btn);
-        optionsList.appendChild(li);
+        btn.className = "choice-btn";
+        btn.onclick = () => {
+          if (choice === q.answer) {
+            btn.style.background = "#0f0";
+            score++;
+          } else {
+            btn.style.background = "#f00";
+          }
+          Array.from(choicesDiv.children).forEach(b => b.disabled = true);
+          nextBtn.style.display = "block";
+        };
+        choicesDiv.appendChild(btn);
       });
-    }
-
-    function selectAnswer(selected, correct) {
-      const buttons = optionsList.querySelectorAll("button");
-      buttons.forEach(btn => btn.disabled = true);
-
-      if (selected === correct) {
-        resultDiv.textContent = "✅ Correct!";
-        score++;
-      } else {
-        resultDiv.textContent = `❌ Wrong! Correct answer: ${correct}`;
-      }
-
-      nextBtn.style.display = "inline-block";
     }
 
     nextBtn.onclick = () => {
       current++;
       if (current < questions.length) {
-        loadQuestion();
+        showQuestion();
+        nextBtn.style.display = "none";
       } else {
-        showFinalScore();
+        questionText.textContent = "🧠 Quiz Finished!";
+        choicesDiv.innerHTML = "";
+        nextBtn.style.display = "none";
+        scoreDisplay.textContent = `You scored ${score} out of ${questions.length}`;
       }
     };
 
-    function showFinalScore() {
-      imgEl.style.display = "none";
-      qText.innerHTML = `🎉 Finished!<br>Your score: ${score} / ${questions.length}`;
-      optionsList.innerHTML = "";
-      resultDiv.innerHTML = "";
-      nextBtn.style.display = "none";
-    }
-
-    // Start the game
-    loadQuestion();
+    showQuestion();
   </script>
 </body>
 </html>
