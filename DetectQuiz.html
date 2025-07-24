@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🕵️ Detective Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+      color: white;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      padding: 20px;
+      background-color: #222;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    h1 {
+      font-size: 2em;
+    }
+    #quiz {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #2c2c2c;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .question {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+    }
+    .options button {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .options button:hover {
+      background-color: #666;
+    }
+    #result {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🕵️ Who's The Real Culprit?</h1>
+    <p>Solve the mystery one clue at a time!</p>
+  </header>
+  <div id="quiz">
+    <img src="https://i.ibb.co/ZxD0dKY/detective.jpg" alt="Detective" />
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div id="result"></div>
+  </div>  <script>
+    const questions = [
+      { q: "🩸 You enter a crime scene. What do you observe first?", o: ["🔍 Blood stains", "📜 A note on the table", "👣 Footprints", "🔑 A key on the floor"] },
+      { q: "🧤 The suspect wears gloves. What does this tell you?", o: ["🧠 They planned ahead", "😨 Nervousness", "😎 Style", "🤷 Nothing"] },
+      { q: "🪞 The mirror is cracked. You think:", o: ["🤔 Struggle happened", "🧼 It was dirty", "🪓 A weapon hit", "😲 Bad luck"] },
+      { q: "🐕 A barking dog was heard. You suspect:", o: ["🐾 Animal reaction to fear", "👀 Someone was hiding", "🕵️ Distraction", "🎭 Part of the act"] },
+      { q: "📱 The victim's phone has one recent call. You:", o: ["📞 Call it back", "📸 Screenshot the log", "📍 Track GPS", "🔐 Lock it"] },
+      { q: "💡 The lights flickered before the crime. You think:", o: ["⚡ Power tampering", "👻 Paranormal", "🪫 Dying bulb", "💨 Wind"] },
+      { q: "🚪 The back door is open. What now?", o: ["🔍 Search outside", "🚓 Call backup", "🧭 Check footprints", "📸 Photograph it"] },
+      { q: "🍽️ There's one untouched meal. You assume:", o: ["⏰ Crime was quick", "🍔 Not hungry", "🥂 Poisoned", "🛑 Interrupted"] },
+      { q: "📷 Security cam is broken. Your thought?", o: ["🕶️ Inside job", "🧱 Vandalism", "💣 Covered up", "📴 Random glitch"] },
+      { q: "🖊️ A scribbled word: 'Webs…'. You: ", o: ["💡 Think it's a name", "🕷️ Think of spiders", "🌐 Think internet", "🧠 Mind clue"] },
+
+      { q: "🕰️ What time was the power cut?", o: ["🕓 4 PM", "🕘 9 PM", "🕛 Midnight", "🕥 10:30 AM"] },
+      { q: "📸 Who tampered the CCTV?", o: ["👷 Janitor", "👧 Niece", "🧑‍🦰 Neighbor", "🧑‍💼 Business partner"] },
+      { q: "🧣 There's a red scarf. Belongs to?", o: ["👩 Victim", "🧛 Stranger", "👵 Aunt", "🧑‍🏫 Teacher"] },
+      { q: "🛏️ Crime happened where?", o: ["🛋️ Living Room", "🛏️ Bedroom", "🛁 Bathroom", "🍽️ Dining"] },
+      { q: "💬 Last message says 'RUN'. You think?", o: ["🚨 Panic", "🧠 Warning", "🏃 Escape", "🎭 Prank"] },
+      { q: "🖼️ A tilted picture frame means?", o: ["💥 Struggle", "🖐️ Clue behind", "🌪️ Wind", "😐 Nothing"] },
+      { q: "🧃 Drink was left open. Clue?", o: ["🧪 Poison", "🥤 Habit", "🧊 Cold clue", "🥴 Drugged"] },
+      { q: "🪪 ID is fake. Who used it?", o: ["🕶️ Impostor", "🎭 Actor", "🕵️ Secret agent", "🧟 Stranger"] },
+      { q: "🧥 A coat is missing. Why?", o: ["👣 Escape route", "🧳 Traveler", "🕴️ Disguise", "🤷 Unknown"] },
+      { q: "📍 Red pin on map. You go:", o: ["🚘 Drive there", "📞 Inform HQ", "🚁 Call drone", "📵 Ignore"] },
+
+      { q: "📚 Bookshelf has one book pulled out. It means?", o: ["📄 Hidden item", "📘 Favorite book", "📚 Fell off", "🧼 Clean spot"] },
+      { q: "🎮 Game paused on screen. You suspect:", o: ["⚠️ Sudden event", "🎯 Addicted", "👶 Child was there", "🧑‍💻 Fake clue"] },
+      { q: "📦 A box under the table contains:", o: ["💣 Explosives", "💵 Money", "🧾 Receipts", "🧩 Puzzle"] },
+      { q: "🧼 A strong scent in the air means:", o: ["🧴 Perfume coverup", "🧽 Cleaned crime", "🚭 Smoke hidden", "😷 Infection"] },
+      { q: "🧪 Broken glass from:", o: ["🍷 Wine glass", "🔬 Lab vial", "🪞 Mirror", "🔧 Bulb"] },
+      { q: "🎧 Earphones playing a song... clue?", o: ["🎵 Timing", "🔊 Volume", "📱 Device owner", "🎶 Lyrics"] },
+      { q: "📺 TV on static. Suggests?", o: ["📡 Signal loss", "👻 Paranormal", "📴 Sabotage", "😒 Boring"] },
+      { q: "🎁 Unopened gift. Clue?", o: ["🎉 Surprise", "🎯 Target", "💣 Trap", "📬 Misdelivery"] },
+      { q: "🪑 Chair tipped. Suggests:", o: ["💥 Struggle", "🧹 Cleaning", "😴 Sleepy", "🪜 Climbing"] },
+      { q: "🎈 Red balloon in room. Why?", o: ["🎉 Birthday", "🎭 Disguise", "🎈 Message", "🤡 Joke"] },
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        document.getElementById("question").innerText = "🧠 Case Solved! You’ve completed the detective test.";
+        document.getElementById("options").innerHTML = "<p>Your instincts are <strong>sharp</strong> and you’ve unlocked the mystery. 🏆</p>";
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      document.getElementById("question").innerText = q.q;
+      document.getElementById("options").innerHTML = "";
+
+      q.o.forEach(option => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.onclick = () => {
+          score++;
+          currentQuestion++;
+          showQuestion();
+        };
+        document.getElementById("options").appendChild(btn);
+      });
+    }
+
+    showQuestion();
+  </script></body>
+</html>
