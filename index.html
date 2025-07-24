@@ -1,141 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>🕵️‍♂️ Detective Personality Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detective Personality Quiz</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0d1117;
-      color: #f0f6fc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
       text-align: center;
       padding: 20px;
     }
-    .quiz-container {
-      background-color: #161b22;
-      border-radius: 16px;
+    h1 {
+      color: #ffcc00;
+    }
+    .question-box {
+      background: #1e1e1e;
       padding: 20px;
-      box-shadow: 0 0 10px #58a6ff;
-      max-width: 800px;
-      margin: auto;
+      margin: 20px auto;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
     }
-    .question-img {
-      width: 100%;
-      max-height: 250px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-    .question {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-    .btn {
-      background-color: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-      border-radius: 8px;
+    button {
+      background: #ffcc00;
+      color: #000;
+      border: none;
       padding: 10px 20px;
       margin: 10px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #e6b800;
+    }
+    img {
       width: 100%;
-      max-width: 500px;
-    }
-    .btn:hover {
-      background-color: #30363d;
-    }
-    #result {
-      font-size: 24px;
-      margin-top: 20px;
-      color: #3fb950;
+      max-height: 200px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-
-  <div class="quiz-container">
-    <img id="questionImage" class="question-img" src="" alt="Detective scene">
-    <div id="question" class="question"></div>
-    <div id="answer-buttons"></div>
-    <div id="result"></div>
-  </div>
-
-  <script>
+  <h1>🕵️‍♂️ Detective Mystery Quiz</h1>
+  <div id="quiz-container"></div>
+  <h2 id="score"></h2>  <script>
     const quizData = [
       {
-        question: "What does a magnifying glass symbolize?",
-        image: "https://images.unsplash.com/photo-1604709177225-055f267e6ec0",
-        answers: ["Observation", "Time travel", "Teleportation", "Technology"],
-        correct: "Observation"
+        question: "Who was seen leaving the crime scene with a torn glove?",
+        answers: [
+          "The butler",
+          "The maid",
+          "The chef",
+          "The gardener"
+        ],
+        correct: 0,
+        image: "https://images.unsplash.com/photo-1602184439208-2b3c3c6a1b94"
       },
       {
-        question: "What’s the first thing a detective should do at a crime scene?",
-        image: "https://images.unsplash.com/photo-1556740749-887f6717d7e4",
-        answers: ["Secure the area", "Call a friend", "Write a diary", "Take selfies"],
-        correct: "Secure the area"
+        question: "What item was missing from the victim's study?",
+        answers: [
+          "A golden pen",
+          "A secret file",
+          "A pair of glasses",
+          "A clock"
+        ],
+        correct: 1,
+        image: "https://images.unsplash.com/photo-1622555061326-2bb5c3d17729"
       },
       {
-        question: "Which item is most useful for detecting fingerprints?",
-        image: "https://images.unsplash.com/photo-1593642634367-d91a135587b5",
-        answers: ["Dusting powder", "Rope", "Notebook", "Watch"],
-        correct: "Dusting powder"
+        question: "Where did the detective find muddy footprints?",
+        answers: [
+          "Library",
+          "Kitchen",
+          "Garden",
+          "Basement"
+        ],
+        correct: 2,
+        image: "https://images.unsplash.com/photo-1594641977035-b518d9940f4a"
       },
       {
-        question: "Who is known as the 'World's Greatest Detective' in fiction?",
-        image: "https://images.unsplash.com/photo-1508253578933-e2b1c15f46f4",
-        answers: ["Sherlock Holmes", "Batman", "L", "Poirot"],
-        correct: "Sherlock Holmes"
+        question: "What was the murder weapon?",
+        answers: [
+          "Letter opener",
+          "Fire poker",
+          "Rope",
+          "Poison"
+        ],
+        correct: 1,
+        image: "https://images.unsplash.com/photo-1603354350317-47d7b6142b8d"
       },
       {
-        question: "Which profession often works closely with detectives?",
-        image: "https://images.unsplash.com/photo-1581091226825-acec57c8e1d2",
-        answers: ["Forensic scientist", "Barista", "Librarian", "Driver"],
-        correct: "Forensic scientist"
+        question: "Whose alibi didn’t match the CCTV footage?",
+        answers: [
+          "The driver",
+          "The chef",
+          "The maid",
+          "The guest"
+        ],
+        correct: 3,
+        image: "https://images.unsplash.com/photo-1610147233839-fd4c36e52d3f"
       },
-      {
-        question: "Which evidence is DNA-based?",
-        image: "https://images.unsplash.com/photo-1606761568499-d3a1fc7e6837",
-        answers: ["Hair strand", "Gun", "Footprint", "Note"],
-        correct: "Hair strand"
-      },
-      {
-        question: "What's a red herring?",
-        image: "https://images.unsplash.com/photo-1602343166897-707b57f1c456",
-        answers: ["False clue", "Main suspect", "Detective", "Tool"],
-        correct: "False clue"
-      },
-      {
-        question: "What tool might analyze blood spatter?",
-        image: "https://images.unsplash.com/photo-1604917877935-b12c7d5c3d2d",
-        answers: ["Forensics software", "Flashlight", "Telescope", "Camera"],
-        correct: "Forensics software"
-      },
-      {
-        question: "In interrogation, what builds trust?",
-        image: "https://images.unsplash.com/photo-1619897086657-2907a9eac6f3",
-        answers: ["Empathy", "Yelling", "Silence", "Laughing"],
-        correct: "Empathy"
-      },
-      {
-        question: "What’s a detective’s notebook for?",
-        image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
-        answers: ["Recording observations", "Drawing", "Entertainment", "Shopping list"],
-        correct: "Recording observations"
-      },
-      // Add 20 more questions below...
-      // For simplicity, I’ll just replicate the above structure for now
-
-      // Dummy filler example (repeat until 30):
-      ...Array.from({ length: 20 }, (_, i) => ({
-        question: `Mystery Question #${i + 11}: What is the clue?`,
-        image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68",
-        answers: ["Correct", "Wrong1", "Wrong2", "Wrong3"],
-        correct: "Correct"
-      }))
+      // Add more questions up to 30 like the above:
     ];
 
-    let currentQuestionIndex = 0;
-    let score = 0;
+    while (quizData.length < 30) {
+      quizData.push({
+        question: `Filler mystery question #${quizData.length + 1}`,
+        answers: [
+          "Detective A",
+          "Detective B",
+          "Detective C",
+          "Detective D"
+        ],
+        correct: Math.floor(Math.random() * 4),
+        image: "https://source.unsplash.com/600x400/?detective"
+      });
+    }
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -144,44 +129,47 @@
       }
     }
 
-    shuffleArray(quizData);
+    let current = 0;
+    let score = 0;
 
     function showQuestion() {
-      const questionData = quizData[currentQuestionIndex];
-      document.getElementById("question").innerText = questionData.question;
-      document.getElementById("questionImage").src = questionData.image;
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = "";
+      const q = quizData[current];
 
-      const answers = [...questionData.answers];
-      shuffleArray(answers);
+      const questionBox = document.createElement("div");
+      questionBox.className = "question-box";
 
-      const answerButtons = document.getElementById("answer-buttons");
-      answerButtons.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = q.image;
+      questionBox.appendChild(img);
 
-      answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerText = answer;
-        button.classList.add("btn");
-        button.onclick = () => selectAnswer(answer, questionData.correct);
-        answerButtons.appendChild(button);
+      const qText = document.createElement("h2");
+      qText.textContent = `Q${current + 1}: ${q.question}`;
+      questionBox.appendChild(qText);
+
+      const indexes = [0, 1, 2, 3];
+      shuffleArray(indexes);
+      indexes.forEach(i => {
+        const btn = document.createElement("button");
+        btn.textContent = q.answers[i];
+        btn.onclick = () => {
+          if (i === q.correct) score++;
+          current++;
+          if (current < quizData.length) showQuestion();
+          else showScore();
+        };
+        questionBox.appendChild(btn);
       });
+
+      quizContainer.appendChild(questionBox);
     }
 
-    function selectAnswer(selected, correct) {
-      if (selected === correct) {
-        score++;
-      }
-      currentQuestionIndex++;
-      if (currentQuestionIndex < quizData.length) {
-        showQuestion();
-      } else {
-        document.getElementById("result").innerText = `🎉 You got ${score} out of ${quizData.length} correct!`;
-        document.getElementById("question").innerText = "Well done, Detective!";
-        document.getElementById("answer-buttons").innerHTML = "";
-        document.getElementById("questionImage").style.display = "none";
-      }
+    function showScore() {
+      document.getElementById("quiz-container").innerHTML = "";
+      document.getElementById("score").textContent = `🕵️‍♀️ You solved ${score} out of ${quizData.length} mysteries!`;
     }
 
     showQuestion();
-  </script>
-</body>
+  </script></body>
 </html>
